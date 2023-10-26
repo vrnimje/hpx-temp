@@ -34,6 +34,9 @@ jobs:
       CMAKE_PREFIX_PATH: ${{github.workspace}}/.local
     steps:
     - uses: actions/checkout@v2
+
+    - name: Install Ninja
+      run: apt install ninja-build -y
        
     - name: Configure CMake
       run: cmake -S . -B build -DCMAKE_BUILD_TYPE=Release
