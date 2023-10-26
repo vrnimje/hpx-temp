@@ -59,7 +59,7 @@ else()
       FetchContent_Populate(HWLoc)
       set(HWLOC_ROOT "${CMAKE_BINARY_DIR}/_deps/hwloc-src")
     endif()
-  endif()
+  endif() # End hwloc installation
   
   # Installing HPX
   FetchContent_Declare(HPX
@@ -74,7 +74,8 @@ else()
       execute_process(COMMAND sh -c "cd ${CMAKE_BINARY_DIR}/_deps/hpx-src && mkdir -p build && cd build && cmake .. -DHPX_WITH_CXX_STANDARD=20 -DHPX_WITH_EXAMPLES=OFF -DHWLOC_ROOT=${HWLOC_ROOT} -DHPX_WITH_FETCH_ASIO=ON -DHPX_WITH_MALLOC=system -DCMAKE_INSTALL_PREFIX=${CMAKE_BINARY_DIR}/_deps/hpx-installed -G Ninja && ninja && ninja install")
       set(HPX_INCLUDE_DIR "${CMAKE_BINARY_DIR}/_deps/hpx-installed") 
     elseif(WIN32)
-      execute_process(COMMAND sh -c "cd ${CMAKE_BINARY_DIR}\\_deps\\hpx-src && cmake -S . -B build -DHPX_WITH_CXX_STANDARD=20 -DHPX_WITH_EXAMPLES=OFF -DHWLOC_ROOT=${HWLOC_ROOT} -DHPX_WITH_FETCH_ASIO=ON -DHPX_WITH_MALLOC=system -DCMAKE_INSTALL_PREFIX=${CMAKE_BINARY_DIR}/_deps/hpx-installed --config Release --parallel && cmake --install build --config Release --prefix \"${CMAKE_BINARY_DIR}/_deps/hpx-installed\"")
+      execute_process(COMMAND sh -c "cd ${CMAKE_BINARY_DIR}\\_deps\\hpx-src && cmake -S . -B build -DHPX_WITH_CXX_STANDARD=20 -DHPX_WITH_EXAMPLES=OFF -DHWLOC_ROOT=${HWLOC_ROOT} -DHPX_WITH_FETCH_ASIO=ON -DHPX_WITH_MALLOC=system -DCMAKE_INSTALL_PREFIX=${CMAKE_BINARY_DIR}/_deps/hpx-installed --config Release --parallel && cmake --install build --config Release --prefix \"${CMAKE_BINARY_DIR}\\_deps\\hpx-installed\"")
+      set(HPX_INCLUDE_DIR "${CMAKE_BINARY_DIR}\\_deps\\hpx-installed") 
     endif()
   endif()
   FetchContent_MakeAvailable(HPX)
