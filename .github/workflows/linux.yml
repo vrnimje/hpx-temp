@@ -16,27 +16,29 @@ on:
 
 jobs:
   build:
-    name: ${{matrix.cxx}}
+    name: ${{ matrix.cpp_compiler }}
     runs-on: ubuntu-latest
     strategy:
       fail-fast: false
       matrix:
-        cxx:
-          - g++-12
-          - clang++-15
         include:
-          - cxx: g++-12
-            compiler: g++-12
-          - cxx: clang++-15
-            compiler: clang++-15
+          - cpp_compiler: g++
+            package: gcc g++
+            additional_command: echo "Move on"
+          - cpp_compiler: clang++-15    
+            package: clang-15
+            additional_command: sudo update-alternatives --install /usr/bin/clang clang $(which clang-15) 10 && sudo update-alternatives --install /usr/bin/clang++ clang++ $(which clang++-15) 10
     env:
-      CXX: ${{matrix.cxx}}
+      CXX: ${{ matrix.cpp_compiler }}
       CMAKE_PREFIX_PATH: ${{github.workspace}}/.local
     steps:
     - uses: actions/checkout@v2
 
     - name: Install Ninja
-      run: sudo apt install ninja-build clang-15 -y
+      run: sudo rm /var/lib/apt/lists/*_* && sudo apt update && sudo apt install --reinstall ninja-build ${{ matrix.package }} git -y
+
+    - name: Additional command
+      run: ${{ matrix.additional_command }}
        
     - name: Configure CMake
       run: cmake -S . -B build -DCMAKE_BUILD_TYPE=Release

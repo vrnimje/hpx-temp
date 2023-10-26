@@ -12,7 +12,7 @@ else()
   # Installing Boost
   include(FetchContent)
   FetchContent_Declare(Boost
-      URL https://github.com/boostorg/boost/releases/download/boost-1.82.0/boost-1.82.0.tar.gz
+      URL https://github.com/boostorg/boost/releases/download/boost-1.81.0/boost-1.81.0.tar.gz
       TLS_VERIFY true
   )
   FetchContent_Populate(Boost)
@@ -22,9 +22,9 @@ else()
 
   if(NOT EX_PRC STREQUAL EX_PRC_INTERNAL)
     if(WIN32)
-      execute_process(COMMAND cmd /C "cd ${CMAKE_BINARY_DIR}\\_deps\\boost-src && .\\bootstrap.bat && .\\b2 headers" OUTPUT_VARIABLE RESULT)
+      execute_process(COMMAND cmd /C "cd ${CMAKE_BINARY_DIR}\\_deps\\boost-src && .\\bootstrap.bat && .\\b2 headers" )
     else()
-      execute_process(COMMAND sh -c "cd ${CMAKE_BINARY_DIR}/_deps/boost-src && ./bootstrap.sh && ./b2 headers" OUTPUT_VARIABLE RESULT)
+      execute_process(COMMAND sh -c "cd ${CMAKE_BINARY_DIR}/_deps/boost-src && ./bootstrap.sh && ./b2 headers" )
     endif()
     set(EX_PRC_INTERNAL ${EX_PRC} CACHE INTERNAL "for internal use only; do not modify")
   endif()
@@ -77,14 +77,13 @@ else()
     if(UNIX)
       execute_process(COMMAND sh -c "cd ${CMAKE_BINARY_DIR}/_deps/hpx-src && mkdir -p build && cd build && cmake .. -DBoost_INCLUDE_DIR=${Boost_INCLUDE_DIR} -DHPX_WITH_CXX_STANDARD=20 -DHPX_WITH_EXAMPLES=OFF -DHWLOC_ROOT=${HWLOC_ROOT} -DHPX_WITH_FETCH_ASIO=ON -DHPX_WITH_MALLOC=system -DCMAKE_INSTALL_PREFIX=${CMAKE_BINARY_DIR}/_deps/hpx-installed -G Ninja && ninja && ninja install")
     elseif(WIN32)
-      execute_process(COMMAND cmd /C "cd ${CMAKE_BINARY_DIR}\\_deps\\hpx-src && cmake -S . -B build -DBoost_INCLUDE_DIR=${Boost_INCLUDE_DIR} -DHPX_WITH_CXX_STANDARD=20 -DHPX_WITH_EXAMPLES=OFF -DHWLOC_ROOT=${HWLOC_ROOT} -DHPX_WITH_FETCH_ASIO=ON -DHPX_WITH_MALLOC=system -DCMAKE_INSTALL_PREFIX=${CMAKE_BINARY_DIR}\\_deps\\hpx-installed && cmake --install build --prefix ${CMAKE_BINARY_DIR}\\_deps\\hpx-installed")
+      execute_process(COMMAND cmd /C "cd ${CMAKE_BINARY_DIR}\\_deps\\hpx-src && cmake -S . -B build -DCMAKE_BUILD_TYPE=Release -DBoost_INCLUDE_DIR=${Boost_INCLUDE_DIR} -DHPX_WITH_CXX_STANDARD=20 -DHPX_WITH_EXAMPLES=OFF -DHWLOC_ROOT=${HWLOC_ROOT} -DHPX_WITH_FETCH_ASIO=ON -DHPX_WITH_MALLOC=system -DCMAKE_INSTALL_PREFIX=${CMAKE_BINARY_DIR}\\_deps\\hpx-installed && cmake --build build --target install")
     endif()
     set(HPX_INCLUDE_DIR "${CMAKE_BINARY_DIR}/_deps/hpx-installed") 
   endif()
-  FetchContent_MakeAvailable(HPX)
   set(HPX_DIR "${CMAKE_BINARY_DIR}/_deps/hpx-installed/lib/cmake/HPX")
   set(CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} "${HPX_DIR}")
-  find_package(HPX REQUIRED PATHS ${CMAKE_BINARY_DIR}/_deps/hpx-installed)
+  find_package(HPX REQUIRED PATHS ${HPX_DIR})
 endif()
 
 add_executable(opt_bench src/main.cpp)
