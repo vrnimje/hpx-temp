@@ -36,7 +36,7 @@ jobs:
     - uses: actions/checkout@v2
 
     - name: Install Ninja
-      run: apt install ninja-build -y
+      run: sudo apt install ninja-build -y
        
     - name: Configure CMake
       run: cmake -S . -B build -DCMAKE_BUILD_TYPE=Release
