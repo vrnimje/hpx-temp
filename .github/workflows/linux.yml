@@ -1,0 +1,43 @@
+name: Linux Build
+
+on:
+  push:
+    branches: [ master ]
+    paths:
+      - ".github/workflows/linux_build.yml"
+      - "src/**"
+      - "CMakeLists.txt"
+  pull_request:
+    branches: [ master ]
+    paths:
+      - ".github/workflows/linux_build.yml"
+      - "src/**"
+      - "CMakeLists.txt"
+
+jobs:
+  build:
+    name: ${{matrix.cxx}}
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        cxx:
+          - g++-12
+          - clang++-14
+        include:
+          - cxx: g++-12
+            compiler: g++-12
+          - cxx: clang++-14
+            compiler: clang++-14
+    env:
+      CXX: ${{matrix.cxx}}
+      CMAKE_PREFIX_PATH: ${{github.workspace}}/.local
+    steps:
+    - uses: actions/checkout@v2
+       
+    - name: Configure CMake
+      run: cmake -S . -B build -DCMAKE_BUILD_TYPE=Release
+
+    - name: Build
+      run: cmake --build build --parallel
+
