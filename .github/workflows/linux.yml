@@ -2,13 +2,13 @@ name: Linux Build
 
 on:
   push:
-    branches: [ master ]
+    branches: [ main ]
     paths:
       - ".github/workflows/linux_build.yml"
       - "src/**"
       - "CMakeLists.txt"
   pull_request:
-    branches: [ master ]
+    branches: [ main ]
     paths:
       - ".github/workflows/linux_build.yml"
       - "src/**"
