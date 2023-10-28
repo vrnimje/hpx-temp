@@ -52,7 +52,8 @@ else()
     if(NOT HWLoc_POPULATED)
       FetchContent_Populate(HWLoc)
     endif()
-    set(HWLOC_ROOT "${CMAKE_BINARY_DIR}/_deps/HWLoc-src")
+    set(HWLOC_ROOT "${CMAKE_BINARY_DIR}/_deps/hwloc-src")
+    link_directories(${HWLOC_ROOT}/lib)
   else()
     FetchContent_Declare(HWLoc
       URL https://download.open-mpi.org/release/hwloc/v2.9/hwloc-win32-build-2.9.3.zip
@@ -61,7 +62,8 @@ else()
     if(NOT HWLoc_POPULATED)
       FetchContent_Populate(HWLoc)
     endif()
-    set(HWLOC_ROOT "${CMAKE_BINARY_DIR}/_deps/HWLoc-src")
+    set(HWLOC_ROOT "${CMAKE_BINARY_DIR}/_deps/hwloc-src")
+    link_directories(${HWLOC_ROOT}/lib)
   endif() # End hwloc installation
   
 
