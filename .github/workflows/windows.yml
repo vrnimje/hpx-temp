@@ -28,3 +28,6 @@ jobs:
     - name: Build
       run: cmake --build build --config Release --parallel
 
+    - name: Execute
+      run: .\build\Release\opt_bench.exe
+

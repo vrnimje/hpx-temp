@@ -46,3 +46,6 @@ jobs:
     - name: Build
       run: cmake --build build --parallel
 
+    - name: Execute
+      run: ./build/opt_bench
+
