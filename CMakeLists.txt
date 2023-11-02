@@ -56,9 +56,6 @@ else()
     link_directories(${HWLOC_ROOT}/lib)
     set(Hwloc_INCLUDE_DIR ${HWLOC_ROOT}/include CACHE INTERNAL "")
     set(Hwloc_LIBRARY ${HWLOC_ROOT}/lib CACHE INTERNAL "")
-    set(LIBRARY_OUTPUT_PATH "${CMAKE_BINARY_DIR}")
-    set(EXECUTABLE_OUTPUT_PATH "${CMAKE_BINARY_DIR}")
-    set(CMAKE_POSITION_INDEPENDENT_CODE ON)
   else()
     FetchContent_Declare(HWLoc
       URL https://download.open-mpi.org/release/hwloc/v2.9/hwloc-win64-build-2.9.3.zip
@@ -72,9 +69,6 @@ else()
     link_directories(${HWLOC_ROOT}/lib)
     set(Hwloc_INCLUDE_DIR ${HWLOC_ROOT}/include CACHE INTERNAL "")
     set(Hwloc_LIBRARY ${HWLOC_ROOT}/lib CACHE INTERNAL "")
-    set(LIBRARY_OUTPUT_PATH "${CMAKE_BINARY_DIR}")
-    set(EXECUTABLE_OUTPUT_PATH "${CMAKE_BINARY_DIR}")
-    set(CMAKE_POSITION_INDEPENDENT_CODE ON)
   endif() # End hwloc installation
   
 
@@ -90,6 +84,7 @@ else()
     set(HPX_WITH_FETCH_ASIO ON  CACHE INTERNAL "")
     set(HPX_WITH_MALLOC "system"  CACHE INTERNAL "")
     set(HPX_WITH_EXAMPLES OFF  CACHE INTERNAL "")
+    set(HPX_WITH_TESTS OFF  CACHE INTERNAL "")
     FetchContent_Populate(HPX)
     add_subdirectory(${hpx_SOURCE_DIR} ${hpx_BINARY_DIR} EXCLUDE_FROM_ALL)
   endif()
@@ -102,4 +97,17 @@ target_link_libraries(opt_bench
  PRIVATE HPX::wrap_main 
  PRIVATE HPX::iostreams_component
 )
+
+if(WIN32 OR "${CMAKE_GENERATOR_PLATFORM}" STREQUAL "Win64")
+  add_custom_command(TARGET opt_bench POST_BUILD
+    COMMAND ${CMAKE_COMMAND} -E copy_directory
+        "${hpx_BINARY_DIR}/${CMAKE_BUILD_TYPE}/bin"
+        $<TARGET_FILE_DIR:opt_bench>
+  )
+  add_custom_command(TARGET opt_bench POST_BUILD
+    COMMAND ${CMAKE_COMMAND} -E copy_if_different
+        "${HWLOC_ROOT}/bin/libhwloc-15.dll"
+        $<TARGET_FILE_DIR:opt_bench>
+  )
+endif()
 
