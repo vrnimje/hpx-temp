@@ -98,7 +98,7 @@ target_link_libraries(opt_bench
  PRIVATE HPX::iostreams_component
 )
 
-if(WIN32 OR "${CMAKE_GENERATOR_PLATFORM}" STREQUAL "Win64")
+if(WIN32 OR "${CMAKE_GENERATOR_PLATFORM}" STREQUAL "Win64" AND NOT WITH_CUSTOM_HPX)
   add_custom_command(TARGET opt_bench POST_BUILD
     COMMAND ${CMAKE_COMMAND} -E copy_directory
         "${hpx_BINARY_DIR}/${CMAKE_BUILD_TYPE}/bin"
