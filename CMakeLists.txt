@@ -27,8 +27,13 @@ else()
     set(EX_PRC_INTERNAL ${EX_PRC} CACHE INTERNAL "for internal use only; do not modify")
   endif()
   
-  set(Boost_DIR "${CMAKE_BINARY_DIR}/_deps/boost-installed/lib/cmake")
-  set(Boost_INCLUDE_DIR "${CMAKE_BINARY_DIR}/_deps/boost-installed/include")
+  if(UNIX)
+    set(Boost_DIR "${CMAKE_BINARY_DIR}/_deps/boost-installed/lib/cmake")
+    set(Boost_INCLUDE_DIR "${CMAKE_BINARY_DIR}/_deps/boost-installed/include")
+  else()
+    set(Boost_DIR "${CMAKE_BINARY_DIR}/_deps/boost-installed/lib/cmake")
+    set(Boost_INCLUDE_DIR "${CMAKE_BINARY_DIR}/_deps/boost-installed/include/boost-1_81")
+  endif()
   
   # Installing HWloc  
   
