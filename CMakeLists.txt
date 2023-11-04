@@ -113,17 +113,21 @@ endif()
 
 add_executable(opt_bench src/main.cpp)
 
+# Link Shlwapi to the project
+if ("${CMAKE_SYSTEM_NAME}" MATCHES "Windows")
+  set(_EXTRA_LIBS_ Shlwapi)
+else()
+  set(_EXTRA_LIBS_ "")
+endif()
+
 target_link_libraries(opt_bench
  PRIVATE HPX::hpx 
  PRIVATE HPX::wrap_main
  PRIVATE HPX::iostreams_component
  PRIVATE benchmark::benchmark
+ PRIVATE ${_EXTRA_LIBS_}
 )
 
-# Link Shlwapi to the project
-if ("${CMAKE_SYSTEM_NAME}" MATCHES "Windows")
-  target_link_libraries(opt_bench Shlwapi)
-endif()
 
 if(WIN32 OR "${CMAKE_GENERATOR_PLATFORM}" STREQUAL "Win64" AND NOT WITH_CUSTOM_HPX)
   add_custom_command(TARGET opt_bench POST_BUILD
