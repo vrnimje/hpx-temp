@@ -10,28 +10,10 @@
 
 #include <hpx/algorithm.hpp>
 #include <hpx/execution.hpp>
-#include <hpx/init.hpp>
+#include <hpx/hpx_main.hpp>
 #include <hpx/iostream.hpp>
 
-///////////////////////////////////////////////////////////////////////////////
-//[mul_print_matrix
-// void print_matrix(std::vector<int> const& M, std::size_t rows, std::size_t
-// cols,
-//     char const* message)
-// {
-//     std::cout << "\nMatrix " << message << " is:" << std::endl;
-//     for (std::size_t i = 0; i < rows; i++)
-//     {
-//         for (std::size_t j = 0; j < cols; j++)
-//             std::cout << M[i * cols + j] << " ";
-//         std::cout << "\n";
-//     }
-// }
-// //]
-
-///////////////////////////////////////////////////////////////////////////////
-//[mul_hpx_main
-static void hpx_main(benchmark::State &s) {
+static void hpx_parallel_mmul_bench(benchmark::State &s) {
   using element_type = int;
 
   // Define matrix sizes
@@ -60,35 +42,17 @@ static void hpx_main(benchmark::State &s) {
       static_cast<double>(benchmark::kMillisecond)};
 
   // Perform matrix multiplication
-  hpx::experimental::for_loop(hpx::execution::par, 0, rowsA, [&](auto i) {
-    hpx::experimental::for_loop(0, colsB, [&](auto j) {
-      R[i * colsR + j] = 0;
-      hpx::experimental::for_loop(0, rowsB, [&](auto k) {
-        auto start = std::chrono::high_resolution_clock::now();
-        hpx::this_thread::sleep_for(sleep_duration);
-        R[i * colsR + j] += A[i * colsA + k] * B[k * colsB + j];
-        auto end = std::chrono::high_resolution_clock::now();
-        auto elapsed_seconds =
-            std::chrono::duration_cast<std::chrono::duration<double>>(end -
-                                                                      start);
-
-        s.SetIterationTime(elapsed_seconds.count());
+  for (auto _ : s) {
+    hpx::experimental::for_loop(hpx::execution::par, 0, rowsA, [&](auto i) {
+      hpx::experimental::for_loop(0, colsB, [&](auto j) {
+        R[i * colsR + j] = 0;
+        hpx::experimental::for_loop(0, rowsB, [&](auto k) {
+          R[i * colsR + j] += A[i * colsA + k] * B[k * colsB + j];
+        });
       });
     });
-  });
+  }
 }
-//]
-
-///////////////////////////////////////////////////////////////////////////////
-//[mul_main
-// int main(int argc, char* argv[])
-// {
-
-//     hpx::local::init_params init_args;
-
-//     return hpx::local::init(hpx_main, argc, argv, init_args);
-// }
-//]
 
 // Parallel implementation
 void parallel_mmul(const float *A, const float *B, float *C, std::size_t N,
@@ -164,17 +128,14 @@ BENCHMARK(parallel_mmul_bench)
     ->Unit(benchmark::kMillisecond)
     ->UseRealTime();
 
-BENCHMARK(hpx_main)
+BENCHMARK(hpx_parallel_mmul_bench)
     ->Arg(384)
     ->Arg(768)
     ->Arg(1152)
     ->Unit(benchmark::kMillisecond)
-    ->UseManualTime();
+    ->UseRealTime();
 
 int main(int argc, char **argv) {
-  hpx::start(0, nullptr);
   ::benchmark::Initialize(&argc, argv);
   ::benchmark::RunSpecifiedBenchmarks();
-  hpx::finalize();
-  hpx::stop();
 }
