@@ -13,29 +13,41 @@ else()
       URL https://github.com/boostorg/boost/releases/download/boost-1.81.0/boost-1.81.0.tar.gz
       TLS_VERIFY true
   )
-  FetchContent_Populate(Boost)
+  FetchContent_GetProperties(Boost)
 
-  set(EX_PRC "Execute process" CACHE STRING "Used by command line tool.")
-  set(EX_PRC_INTERNAL "" CACHE INTERNAL "for internal use only; do not modify")
+  if(NOT Boost_POPULATED)
 
-  if(NOT EX_PRC STREQUAL EX_PRC_INTERNAL)
-    if(WIN32)
-      execute_process(COMMAND cmd /C "cd ${CMAKE_BINARY_DIR}\\_deps\\boost-src && .\\bootstrap.bat && .\\b2 headers cxxflags=/std:c++20" )
-    elseif(${CMAKE_SYSTEM_NAME} MATCHES "Darwin")
-      execute_process(COMMAND sh -c "cd ${CMAKE_BINARY_DIR}/_deps/boost-src && ./bootstrap.sh --prefix=${CMAKE_BINARY_DIR}/_deps/boost-installed && ./b2 install --prefix=${CMAKE_BINARY_DIR}/_deps/boost-installed cxxflags=--std=c++20" )
-    else()
-      execute_process(COMMAND sh -c "cd ${CMAKE_BINARY_DIR}/_deps/boost-src && ./bootstrap.sh && ./b2 headers cxxflags=--std=c++20" )
-    endif()
-    set(EX_PRC_INTERNAL ${EX_PRC} CACHE INTERNAL "for internal use only; do not modify")
+    message(STATUS "Fetching Boost")
+    FetchContent_Populate(Boost)
+
+    message(STATUS "Configuring Boost")
+    message(STATUS "Source DIR: ${Boost_SOURCE_DIR} Bin DIR ${Boost_BINARY_DIR}")
+    add_subdirectory(${Boost_SOURCE_DIR} ${Boost_BINARY_DIR} EXCLUDE_FROM_ALL)
+
   endif()
+  #FetchContent_Populate(Boost)
+
+  #set(EX_PRC "Execute process" CACHE STRING "Used by command line tool.")
+  #set(EX_PRC_INTERNAL "" CACHE INTERNAL "for internal use only; do not modify")
+
+  #if(NOT EX_PRC STREQUAL EX_PRC_INTERNAL)
+  #  if(WIN32)
+  #    execute_process(COMMAND cmd /C "cd ${CMAKE_BINARY_DIR}\\_deps\\boost-src && .\\bootstrap.bat && .\\b2 headers cxxflags=/std:c++20" )
+  #  elseif(${CMAKE_SYSTEM_NAME} MATCHES "Darwin")
+  #    execute_process(COMMAND sh -c "cd ${CMAKE_BINARY_DIR}/_deps/boost-src && ./bootstrap.sh --prefix=${CMAKE_BINARY_DIR}/_deps/boost-installed && ./b2 install --prefix=${CMAKE_BINARY_DIR}/_deps/boost-installed cxxflags=--std=c++20" )
+  #  else()
+  #    execute_process(COMMAND sh -c "cd ${CMAKE_BINARY_DIR}/_deps/boost-src && ./bootstrap.sh && ./b2 headers cxxflags=--std=c++20" )
+  #  endif()
+  #  set(EX_PRC_INTERNAL ${EX_PRC} CACHE INTERNAL "for internal use only; do not modify")
+  #endif()
   
-  if(${CMAKE_SYSTEM_NAME} MATCHES "Darwin")
-    set(Boost_DIR "${CMAKE_BINARY_DIR}/_deps/boost-installed/lib/cmake")
-    set(Boost_INCLUDE_DIR "${CMAKE_BINARY_DIR}/_deps/boost-installed/include")
-  else()
-    set(Boost_DIR "${CMAKE_BINARY_DIR}/_deps/boost-src")
-    set(Boost_INCLUDE_DIR "${CMAKE_BINARY_DIR}/_deps/boost-src")
-  endif()
+  #if(${CMAKE_SYSTEM_NAME} MATCHES "Darwin")
+  #  set(Boost_DIR "${CMAKE_BINARY_DIR}/_deps/boost-installed/lib/cmake")
+  #  set(Boost_INCLUDE_DIR "${CMAKE_BINARY_DIR}/_deps/boost-installed/include")
+  #else()
+  #  set(Boost_DIR "${CMAKE_BINARY_DIR}/_deps/boost-src")
+  #  set(Boost_INCLUDE_DIR "${CMAKE_BINARY_DIR}/_deps/boost-src")
+  #endif()
   
   # Installing HWloc  
   
