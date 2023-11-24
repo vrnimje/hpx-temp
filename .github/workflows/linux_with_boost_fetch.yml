@@ -41,7 +41,7 @@ jobs:
       run: ${{ matrix.additional_command }}
        
     - name: Install HWLoc
-      run: sudo apt install hwloc
+      run: sudo apt install hwloc libhwloc-dev
 
     - name: Configure CMake
       run: cmake -S . -B build -DCMAKE_BUILD_TYPE=Release -DHPX_WITH_FETCH_BOOST=On
