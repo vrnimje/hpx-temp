@@ -26,7 +26,12 @@ jobs:
       run: brew install boost
 
     - name: Install HWLoc
-      run: brew install hwloc
+      run: |
+        git clone https://github.com/open-mpi/hwloc.git 
+        cd hwloc
+        ./autogen.sh
+        cd ..
+        rm -rf hwloc
 
     - name: Configure CMake
       run: cmake -S . -B build
