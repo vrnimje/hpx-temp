@@ -1,4 +1,4 @@
-name: Linux Build
+name: Linux Build with HWLoc fetch
 
 on:
   push:
@@ -40,14 +40,11 @@ jobs:
     - name: Install Boost
       run: sudo apt install libboost-all-dev
 
-    - name: Install HWLoc
-      run: sudo apt install hwloc
-
     - name: Additional command
       run: ${{ matrix.additional_command }}
        
     - name: Configure CMake
-      run: cmake -S . -B build -DCMAKE_BUILD_TYPE=Release
+      run: cmake -S . -B build -DCMAKE_BUILD_TYPE=Release -DHPX_WITH_FETCH_HWLOC=ON
 
     - name: Build
       run: cmake --build build --parallel

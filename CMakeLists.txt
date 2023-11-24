@@ -2,6 +2,8 @@ cmake_minimum_required(VERSION 3.19)
 
 project("HPX Optimization cases" CXX)
 
+list(APPEND CMAKE_MODULE_PATH "${CMAKE_CURRENT_LIST_DIR}/cmake")
+
 option(WITH_CUSTOM_HPX "Use available HPX" OFF)
 option(HPX_WITH_FETCH_BOOST "Use available Boost" OFF)
 option(HPX_WITH_FETCH_HWLOC "Use available HWLoc" OFF)
@@ -44,51 +46,52 @@ else()
   endif()
   
   # Installing HWloc  
-  # if(HPX_WITH_FETCH_HWLOC)  
-  if(UNIX)
-    include(FetchContent)
-    FetchContent_Declare(HWLoc
-      URL https://download.open-mpi.org/release/hwloc/v2.9/hwloc-2.9.3.tar.gz
-      TLS_VERIFY true
-    )
-    if(NOT HWLoc_POPULATED)
-      FetchContent_Populate(HWLoc)
-      execute_process(COMMAND sh -c "cd ${CMAKE_BINARY_DIR}/_deps/hwloc-src && ./configure --prefix=${CMAKE_BINARY_DIR}/_deps/hwloc-installed && make -j && make install")
-    endif()
-    set(HWLOC_ROOT "${CMAKE_BINARY_DIR}/_deps/hwloc-installed")
-  elseif("${CMAKE_GENERATOR_PLATFORM}" STREQUAL "Win64")
-    FetchContent_Declare(HWLoc
-      URL https://download.open-mpi.org/release/hwloc/v2.9/hwloc-win64-build-2.9.3.zip
-      TLS_VERIFY true
-    )
-    if(NOT HWLoc_POPULATED)
-      FetchContent_Populate(HWLoc)
-    endif()
-    set(HWLOC_ROOT "${CMAKE_BINARY_DIR}/_deps/hwloc-src" CACHE INTERNAL "")
-    find_package(hwloc REQUIRED PATHS ${HWLOC_ROOT} NO_DEFAULT_PATH)
-    include_directories(${HWLOC_ROOT}/include)
-    link_directories(${HWLOC_ROOT}/lib)
-    set(Hwloc_INCLUDE_DIR ${HWLOC_ROOT}/include CACHE INTERNAL "")
-    set(Hwloc_LIBRARY ${HWLOC_ROOT}/lib CACHE INTERNAL "")
+  if(HPX_WITH_FETCH_HWLOC)  
+    if(UNIX)
+      include(FetchContent)
+      FetchContent_Declare(HWLoc
+        URL https://download.open-mpi.org/release/hwloc/v2.9/hwloc-2.9.3.tar.gz
+        TLS_VERIFY true
+      )
+      if(NOT HWLoc_POPULATED)
+        FetchContent_Populate(HWLoc)
+        execute_process(COMMAND sh -c "cd ${CMAKE_BINARY_DIR}/_deps/hwloc-src && ./configure --prefix=${CMAKE_BINARY_DIR}/_deps/hwloc-installed && make -j && make install")
+      endif()
+      set(HWLOC_ROOT "${CMAKE_BINARY_DIR}/_deps/hwloc-installed")
+    elseif("${CMAKE_GENERATOR_PLATFORM}" STREQUAL "Win64")
+      FetchContent_Declare(HWLoc
+        URL https://download.open-mpi.org/release/hwloc/v2.9/hwloc-win64-build-2.9.3.zip
+        TLS_VERIFY true
+      )
+      if(NOT HWLoc_POPULATED)
+        FetchContent_Populate(HWLoc)
+      endif()
+      set(HWLOC_ROOT "${CMAKE_BINARY_DIR}/_deps/hwloc-src" CACHE INTERNAL "")
+      find_package(hwloc REQUIRED PATHS ${HWLOC_ROOT} NO_DEFAULT_PATH)
+      include_directories(${HWLOC_ROOT}/include)
+      link_directories(${HWLOC_ROOT}/lib)
+      set(Hwloc_INCLUDE_DIR ${HWLOC_ROOT}/include CACHE INTERNAL "")
+      set(Hwloc_LIBRARY ${HWLOC_ROOT}/lib CACHE INTERNAL "")
+    else()
+      FetchContent_Declare(HWLoc
+        URL https://download.open-mpi.org/release/hwloc/v2.9/hwloc-win64-build-2.9.3.zip
+        TLS_VERIFY true
+      )
+      if(NOT HWLoc_POPULATED)
+        FetchContent_Populate(HWLoc)
+      endif()
+      set(HWLOC_ROOT "${CMAKE_BINARY_DIR}/_deps/hwloc-src" CACHE INTERNAL "")
+      include_directories(${HWLOC_ROOT}/include)
+      link_directories(${HWLOC_ROOT}/lib)
+      set(Hwloc_INCLUDE_DIR ${HWLOC_ROOT}/include CACHE INTERNAL "")
+      set(Hwloc_LIBRARY ${HWLOC_ROOT}/lib CACHE INTERNAL "")
+    endif() # End hwloc installation
   else()
-    FetchContent_Declare(HWLoc
-      URL https://download.open-mpi.org/release/hwloc/v2.9/hwloc-win64-build-2.9.3.zip
-      TLS_VERIFY true
-    )
-    if(NOT HWLoc_POPULATED)
-      FetchContent_Populate(HWLoc)
-    endif()
-    set(HWLOC_ROOT "${CMAKE_BINARY_DIR}/_deps/hwloc-src" CACHE INTERNAL "")
-    include_directories(${HWLOC_ROOT}/include)
-    link_directories(${HWLOC_ROOT}/lib)
-    set(Hwloc_INCLUDE_DIR ${HWLOC_ROOT}/include CACHE INTERNAL "")
-    set(Hwloc_LIBRARY ${HWLOC_ROOT}/lib CACHE INTERNAL "")
-  endif() # End hwloc installation
-  # else()
-  #   find_package(HWLOC REQUIRED)
-  # endif()
+    find_package(HWLOC REQUIRED)
+  endif()
 
   # Installing HPX
+  include(FetchContent)
   FetchContent_Declare(HPX
     URL https://github.com/STEllAR-GROUP/hpx/archive/refs/tags/v1.9.1.tar.gz
     TLS_VERIFY true
