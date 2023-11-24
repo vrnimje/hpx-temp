@@ -2,8 +2,6 @@ cmake_minimum_required(VERSION 3.19)
 
 project("HPX Optimization cases" CXX)
 
-list(APPEND CMAKE_MODULE_PATH "${CMAKE_CURRENT_LIST_DIR}/cmake")
-
 option(WITH_CUSTOM_HPX "Use available HPX" OFF)
 option(HPX_WITH_FETCH_BOOST "Use available Boost" OFF)
 option(HPX_WITH_FETCH_HWLOC "Use available HWLoc" OFF)
@@ -91,6 +89,7 @@ else()
     #   message("-- System detected: MacOS")
     #   find_package(Hwloc REQUIRED)
     # else() 
+    list(APPEND CMAKE_MODULE_PATH "${CMAKE_CURRENT_LIST_DIR}/cmake")
     find_package(HWLOC REQUIRED)
   endif()
 
