@@ -1,10 +1,10 @@
-name: Linux Build with Boost
+name: Linux Build with Boost fetch
 
 on:
   push:
     branches: [ main, cmake ]
     paths:
-      - ".github/workflows/linux.yml"
+      - ".github/workflows/linux_with_boost_fetch.yml"
       - "src/**"
       - "CMakeLists.txt"
   pull_request:

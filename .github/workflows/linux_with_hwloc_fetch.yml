@@ -4,7 +4,7 @@ on:
   push:
     branches: [ main, cmake ]
     paths:
-      - ".github/workflows/linux.yml"
+      - ".github/workflows/linux_with_hwloc_fetch.yml"
       - "src/**"
       - "CMakeLists.txt"
   pull_request:
