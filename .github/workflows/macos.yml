@@ -2,7 +2,7 @@ name: MacOS Build
 
 on:
   push:
-    branches: [ main ]
+    branches: [ main, cmake ]
     paths:
       - ".github/workflows/macos.yml"
       - "src/**"
