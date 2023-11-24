@@ -44,7 +44,7 @@ jobs:
       run: ${{ matrix.additional_command }}
        
     - name: Configure CMake
-      run: cmake -S . -B build -DCMAKE_BUILD_TYPE=Release -DHPX_WITH_FETCH_HWLOC=ON
+      run: cmake -S . -B build -DCMAKE_BUILD_TYPE=Release -DHPX_WITH_FETCH_HWLOC=On
 
     - name: Build
       run: cmake --build build --parallel
