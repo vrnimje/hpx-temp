@@ -87,7 +87,11 @@ else()
       set(Hwloc_LIBRARY ${HWLOC_ROOT}/lib CACHE INTERNAL "")
     endif() # End hwloc installation
   else()
-    find_package(HWLOC REQUIRED)
+    if(${CMAKE_SYSTEM_NAME} MATCHES "Darwin")
+      find_package(Hwloc REQUIRED)
+    else() 
+      find_package(HWLOC REQUIRED)
+    endif()
   endif()
 
   # Installing HPX
