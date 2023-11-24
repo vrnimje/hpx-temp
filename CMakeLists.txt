@@ -86,7 +86,7 @@ else()
     endif() # End hwloc installation
   else()
     list(APPEND CMAKE_MODULE_PATH "${CMAKE_CURRENT_LIST_DIR}/cmake")
-    find_package(Hwloc::hwloc REQUIRED)
+    find_package(Hwloc REQUIRED)
   endif()
 
   # Installing HPX
