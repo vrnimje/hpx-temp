@@ -24,11 +24,11 @@ jobs:
 
     - name: Install Boost and HWLOC
       uses: johnwason/vcpkg-action@v5
-        id: vcpkg
-        with:
-          pkgs: boost hwloc
-          triplet: x64-windows-release
-          token: ${{ github.token }}
+      id: vcpkg
+      with:
+        pkgs: boost hwloc
+        triplet: x64-windows-release
+        token: ${{ github.token }}
 
 
     - name: Configure CMake
