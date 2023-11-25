@@ -22,8 +22,17 @@ jobs:
     steps:
     - uses: actions/checkout@v2
 
+    - name: Install Boost and HWLOC
+      uses: johnwason/vcpkg-action@v5
+        id: vcpkg
+        with:
+          pkgs: boost hwloc
+          triplet: x64-windows-release
+          token: ${{ github.token }}
+
+
     - name: Configure CMake
-      run: cmake -S . -B build -DHPX_WITH_FETCH_BOOST=On -DHPX_WITH_FETCH_HWLOC=On "-DCMAKE_TOOLCHAIN_FILE=$env:VCPKG_INSTALLATION_ROOT\scripts\buildsystems\vcpkg.cmake"
+      run: cmake -S . -B build "-DCMAKE_TOOLCHAIN_FILE=$env:VCPKG_INSTALLATION_ROOT\scripts\buildsystems\vcpkg.cmake"
         
     - name: Build
       run: cmake --build build --config Release --parallel
