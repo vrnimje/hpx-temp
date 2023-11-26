@@ -122,10 +122,18 @@ if(WIN32 OR "${CMAKE_GENERATOR_PLATFORM}" STREQUAL "Win64" AND NOT WITH_CUSTOM_H
         "${hpx_BINARY_DIR}/${CMAKE_BUILD_TYPE}/bin"
         $<TARGET_FILE_DIR:opt_bench>
   )
-  add_custom_command(TARGET opt_bench POST_BUILD
+  if(HPX_WITH_FETCH_HWLOC) 
+    add_custom_command(TARGET opt_bench POST_BUILD
+      COMMAND ${CMAKE_COMMAND} -E copy_if_different
+          "${HWLOC_ROOT}/bin/libhwloc-15.dll"
+          $<TARGET_FILE_DIR:opt_bench>
+    )
+  else()
+    add_custom_command(TARGET opt_bench POST_BUILD
     COMMAND ${CMAKE_COMMAND} -E copy_if_different
-        "${HWLOC_ROOT}/bin/libhwloc-15.dll"
+        "${Hwloc_ROOT}/bin/libhwloc-15.dll"
         $<TARGET_FILE_DIR:opt_bench>
-  )
+    )
+  endif()
 endif()
 
