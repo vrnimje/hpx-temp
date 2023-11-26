@@ -28,7 +28,7 @@ jobs:
         vcpkg install hwloc
         
     - name: Configure CMake
-      run: cmake -S . -B build -DHPX_WITH_BOOST_FETCH=On "-DCMAKE_TOOLCHAIN_FILE=$env:VCPKG_INSTALLATION_ROOT\scripts\buildsystems\vcpkg.cmake"
+      run: cmake -S . -B build -DHPX_WITH_FETCH_BOOST=On"-DCMAKE_TOOLCHAIN_FILE=$env:VCPKG_INSTALLATION_ROOT\scripts\buildsystems\vcpkg.cmake"
         
     - name: Build
       run: cmake --build build --config Release --parallel
