@@ -131,7 +131,7 @@ if(WIN32 OR "${CMAKE_GENERATOR_PLATFORM}" STREQUAL "Win64" AND NOT WITH_CUSTOM_H
   else()
     add_custom_command(TARGET opt_bench POST_BUILD
     COMMAND ${CMAKE_COMMAND} -E copy_if_different
-        "${Hwloc_ROOT}/bin/libhwloc-15.dll"
+        "${Hwloc_ROOT}/debug/lib/hwloc.lib"
         $<TARGET_FILE_DIR:opt_bench>
     )
   endif()
