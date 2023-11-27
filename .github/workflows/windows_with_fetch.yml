@@ -1,16 +1,16 @@
-name: Windows Build with Boost Fetch
+name: Windows Build with Boost & HWLoc Fetch
 
 on:
   push:
     branches: [ main, cmake ]
     paths:
-      - ".github/workflows/windows_with_boost_fetch.yml"
+      - ".github/workflows/windows_with_fetch.yml"
       - "src/**"
       - "CMakeLists.txt"
   pull_request:
     branches: [ main ]
     paths:
-      - ".github/workflows/windows_with_boost_fetch.yml"
+      - ".github/workflows/windows_with_fetch.yml"
       - "src/**"
       - "CMakeLists.txt"
 
@@ -21,14 +21,9 @@ jobs:
       CMAKE_PREFIX_PATH: ${{ github.workspace }}\.local
     steps:
     - uses: actions/checkout@v2
-
-    - name: Install HWLOC
-      run: |
-        vcpkg integrate install
-        vcpkg install hwloc
         
     - name: Configure CMake
-      run: cmake -S . -B build -DHPX_WITH_FETCH_BOOST=On"-DCMAKE_TOOLCHAIN_FILE=$env:VCPKG_INSTALLATION_ROOT\scripts\buildsystems\vcpkg.cmake"
+      run: cmake -S . -B build -DHPX_WITH_FETCH_BOOST=On -DHPX_WITH_FETCH_HWLOC=On "-DCMAKE_TOOLCHAIN_FILE=$env:VCPKG_INSTALLATION_ROOT\scripts\buildsystems\vcpkg.cmake"
         
     - name: Build
       run: cmake --build build --config Release --parallel
